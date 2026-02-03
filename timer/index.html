@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Sprint Timer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .timer-container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .timer-display {
+            background: #d4cdc3;
+            border-radius: 16px;
+            padding: 30px 25px 20px 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .timer-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .time {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+        }
+
+        .timer-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .preset-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .icon-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 5px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+        }
+
+        .control-buttons {
+            display: none;
+        }
+
+        /* Pulsing animation when timer is running */
+        .timer-display.running {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(212, 205, 195, 0.4);
+            }
+        }
+
+        /* Completed state */
+        .timer-display.completed {
+            background: #c8e6c9;
+            animation: celebrate 0.6s ease-in-out;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05); }
+            75% { transform: scale(0.95); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .timer-display {
+                padding: 25px 20px 15px 20px;
+                gap: 15px;
+            }
+
+            .time {
+                font-size: 3rem;
+                letter-spacing: 4px;
+                margin-bottom: 12px;
+            }
+
+            .timer-label {
+                font-size: 0.7rem;
+                margin-bottom: 12px;
+            }
+
+            .preset-buttons {
+                gap: 5px;
+            }
+
+            .preset-btn {
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="timer-display" id="timerDisplay">
+            <div class="timer-content">
+                <div class="time" id="timeDisplay">25:00</div>
+                <div class="timer-label" id="timerLabel">Ready to Start</div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setPreset(15)">15min</button>
+                    <button class="preset-btn active" onclick="setPreset(25)">25min</button>
+                    <button class="preset-btn" onclick="setPreset(30)">30min</button>
+                    <button class="preset-btn" onclick="setPreset(45)">45min</button>
+                </div>
+            </div>
+            
+            <div class="icon-controls">
+                <button class="icon-btn" id="startBtn" onclick="toggleTimer()" title="Start/Pause">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button class="icon-btn" onclick="resetTimer()" title="Reset">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdown = null;
+        let totalSeconds = 1500; // 25 minutes default
+        let remainingSeconds = totalSeconds;
+        let isRunning = false;
+
+        function setPreset(minutes) {
+            if (isRunning) return; // Don't change while running
+            
+            // Update active button
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Set time
+            totalSeconds = minutes * 60;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            
+            // Save to localStorage
+            localStorage.setItem('readingSprintPreset', minutes);
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            isRunning = true;
+            document.getElementById('timerDisplay').classList.add('running');
+            document.getElementById('timerLabel').textContent = 'Keep Reading!';
+            
+            // Change icon to pause
+            const startBtn = document.getElementById('startBtn');
+            startBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+            </svg>`;
+            
+            countdown = setInterval(() => {
+                remainingSeconds--;
+                updateDisplay();
+                
+                // Save state
+                localStorage.setItem('readingSprintRemaining', remainingSeconds);
+                localStorage.setItem('readingSprintRunning', 'true');
+                
+                if (remainingSeconds <= 0) {
+                    completeTimer();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(countdown);
+            document.getElementById('timerDisplay').classList.remove('running');
+            document.getElementById('timerLabel').textContent = 'Paused';
+            
+            // Change icon back to play
+            const startBtn = document.getElementById('startBtn');
+            startBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5v14l11-7z"/>
+            </svg>`;
+            
+            localStorage.setItem('readingSprintRunning', 'false');
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(countdown);
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            
+            // Reset icon to play
+            const startBtn = document.getElementById('startBtn');
+            startBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5v14l11-7z"/>
+            </svg>`;
+            
+            document.getElementById('timerDisplay').classList.remove('running', 'completed');
+            document.getElementById('timerLabel').textContent = 'Ready to Start';
+            
+            // Clear saved state
+            localStorage.removeItem('readingSprintRemaining');
+            localStorage.removeItem('readingSprintRunning');
+        }
+
+        function completeTimer() {
+            isRunning = false;
+            clearInterval(countdown);
+            remainingSeconds = 0;
+            updateDisplay();
+            
+            // Reset icon to play
+            const startBtn = document.getElementById('startBtn');
+            startBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5v14l11-7z"/>
+            </svg>`;
+            
+            document.getElementById('timerDisplay').classList.remove('running');
+            document.getElementById('timerDisplay').classList.add('completed');
+            document.getElementById('timerLabel').textContent = '🎉 Sprint Complete!';
+            
+            // Clear saved state
+            localStorage.removeItem('readingSprintRemaining');
+            localStorage.removeItem('readingSprintRunning');
+            
+            // Play a subtle completion effect (optional)
+            if ('vibrate' in navigator) {
+                navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timeDisplay').textContent = display;
+        }
+
+        // Load saved state on page load
+        function loadState() {
+            const savedPreset = localStorage.getItem('readingSprintPreset');
+            if (savedPreset) {
+                const minutes = parseInt(savedPreset);
+                totalSeconds = minutes * 60;
+                
+                // Update active button
+                document.querySelectorAll('.preset-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === `${minutes}min`) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            const savedRemaining = localStorage.getItem('readingSprintRemaining');
+            const wasRunning = localStorage.getItem('readingSprintRunning') === 'true';
+            
+            if (savedRemaining) {
+                remainingSeconds = parseInt(savedRemaining);
+                updateDisplay();
+                
+                if (wasRunning && remainingSeconds > 0) {
+                    document.getElementById('timerLabel').textContent = 'Session in Progress';
+                    // Don't auto-resume, just show the state
+                }
+            } else {
+                remainingSeconds = totalSeconds;
+                updateDisplay();
+            }
+        }
+
+        // Initialize
+        loadState();
+    </script>
+</body>
+</html>
