@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 180px;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .calendar-container {
+            width: 200px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 2px solid #e8e8e8;
+        }
+
+        .calendar-header {
+            background: #d4cdc3;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .calendar-month {
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .calendar-body {
+            background: #ffffff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-date {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #000000;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .calendar-day {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calendar-year {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .calendar-container {
+                width: 160px;
+            }
+
+            .calendar-header {
+                padding: 10px;
+            }
+
+            .calendar-month {
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+
+            .calendar-body {
+                padding: 15px;
+            }
+
+            .calendar-date {
+                font-size: 3.5rem;
+            }
+
+            .calendar-day {
+                font-size: 0.75rem;
+            }
+
+            .calendar-year {
+                font-size: 0.75rem;
+                margin-top: 5px;
+            }
+        }
+
+        /* Animation on load */
+        .calendar-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="calendar-month" id="month">FEBRUARY</div>
+        </div>
+        <div class="calendar-body">
+            <div class="calendar-date" id="date">2</div>
+            <div class="calendar-day" id="day">MONDAY</div>
+            <div class="calendar-year" id="year">2026</div>
+        </div>
+    </div>
+
+    <script>
+        function updateCalendar() {
+            const now = new Date();
+            
+            // Month names
+            const months = [
+                'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+                'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+            ];
+            
+            // Day names
+            const days = [
+                'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 
+                'THURSDAY', 'FRIDAY', 'SATURDAY'
+            ];
+            
+            // Update calendar
+            document.getElementById('month').textContent = months[now.getMonth()];
+            document.getElementById('date').textContent = now.getDate();
+            document.getElementById('day').textContent = days[now.getDay()];
+            document.getElementById('year').textContent = now.getFullYear();
+        }
+
+        // Update calendar on load and every minute
+        updateCalendar();
+        setInterval(updateCalendar, 60000); // Update every minute in case day changes
+    </script>
+</body>
+</html>
