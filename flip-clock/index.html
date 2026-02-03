@@ -15,12 +15,20 @@
         body {
             background: #ffffff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 250px;
+            min-height: 300px;
             font-family: 'Roboto', sans-serif;
             padding: 20px 20px;
             margin: 0;
+        }
+
+        .clock-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
         .clock-container {
@@ -98,6 +106,15 @@
             align-self: center;
         }
 
+        .date-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 768px) {
             .clock-container {
                 gap: 10px;
@@ -131,6 +148,10 @@
             .colon {
                 font-size: 3rem;
             }
+
+            .date-display {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -163,6 +184,10 @@
                 font-size: 2rem;
                 margin: 0;
             }
+
+            .date-display {
+                font-size: 0.85rem;
+            }
         }
 
         /* Flip animation */
@@ -184,27 +209,31 @@
     </style>
 </head>
 <body>
-    <div class="clock-container">
-        <div class="flip-card" id="hours">
-            <div class="flip-card-inner">
-                <div class="number" id="hoursNum">10</div>
-                <div class="label" id="ampm">AM</div>
+    <div class="clock-wrapper">
+        <div class="clock-container">
+            <div class="flip-card" id="hours">
+                <div class="flip-card-inner">
+                    <div class="number" id="hoursNum">10</div>
+                    <div class="label" id="ampm">AM</div>
+                </div>
+            </div>
+            
+            <div class="colon">:</div>
+            
+            <div class="flip-card" id="minutes">
+                <div class="flip-card-inner">
+                    <div class="number" id="minutesNum">26</div>
+                </div>
+            </div>
+            
+            <div class="flip-card day-card" id="day">
+                <div class="flip-card-inner">
+                    <div class="number" id="dayName">SATURDAY</div>
+                </div>
             </div>
         </div>
         
-        <div class="colon">:</div>
-        
-        <div class="flip-card" id="minutes">
-            <div class="flip-card-inner">
-                <div class="number" id="minutesNum">26</div>
-            </div>
-        </div>
-        
-        <div class="flip-card day-card" id="day">
-            <div class="flip-card-inner">
-                <div class="number" id="dayName">SATURDAY</div>
-            </div>
-        </div>
+        <div class="date-display" id="dateDisplay">February 2, 2026</div>
     </div>
 
     <script>
@@ -230,6 +259,12 @@
             // Get day of week
             const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
             const dayName = days[now.getDay()];
+            
+            // Format date (e.g., "February 2, 2026")
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+            const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            document.getElementById('dateDisplay').textContent = dateString;
             
             // Format numbers with leading zeros
             const hoursFormatted = String(hours).padStart(2, '0');
