@@ -15,20 +15,14 @@
         body {
             background: #ffffff;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 300px;
+            min-height: 100vh;
+            min-height: 250px;
             font-family: 'Roboto', sans-serif;
+            padding: 20px;
             padding: 20px 20px;
             margin: 0;
-        }
-
-        .clock-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
         }
 
         .clock-container {
@@ -106,15 +100,6 @@
             align-self: center;
         }
 
-        .date-display {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #333;
-            text-align: center;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
         @media (max-width: 768px) {
             .clock-container {
                 gap: 10px;
@@ -148,10 +133,6 @@
             .colon {
                 font-size: 3rem;
             }
-
-            .date-display {
-                font-size: 1rem;
-            }
         }
 
         @media (max-width: 480px) {
@@ -184,10 +165,6 @@
                 font-size: 2rem;
                 margin: 0;
             }
-
-            .date-display {
-                font-size: 0.85rem;
-            }
         }
 
         /* Flip animation */
@@ -209,31 +186,27 @@
     </style>
 </head>
 <body>
-    <div class="clock-wrapper">
-        <div class="clock-container">
-            <div class="flip-card" id="hours">
-                <div class="flip-card-inner">
-                    <div class="number" id="hoursNum">10</div>
-                    <div class="label" id="ampm">AM</div>
-                </div>
-            </div>
-            
-            <div class="colon">:</div>
-            
-            <div class="flip-card" id="minutes">
-                <div class="flip-card-inner">
-                    <div class="number" id="minutesNum">26</div>
-                </div>
-            </div>
-            
-            <div class="flip-card day-card" id="day">
-                <div class="flip-card-inner">
-                    <div class="number" id="dayName">SATURDAY</div>
-                </div>
+    <div class="clock-container">
+        <div class="flip-card" id="hours">
+            <div class="flip-card-inner">
+                <div class="number" id="hoursNum">10</div>
+                <div class="label" id="ampm">AM</div>
             </div>
         </div>
-        
-        <div class="date-display" id="dateDisplay">February 2, 2026</div>
+
+        <div class="colon">:</div>
+
+        <div class="flip-card" id="minutes">
+            <div class="flip-card-inner">
+                <div class="number" id="minutesNum">26</div>
+            </div>
+        </div>
+
+        <div class="flip-card day-card" id="day">
+            <div class="flip-card-inner">
+                <div class="number" id="dayName">SATURDAY</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -243,70 +216,64 @@
 
         function updateClock() {
             const now = new Date();
-            
+
             // Get current time
             let hours = now.getHours();
             const minutes = now.getMinutes();
             const isPM = hours >= 12;
-            
+
             // Convert to 12-hour format
             if (hours === 0) {
                 hours = 12;
             } else if (hours > 12) {
                 hours = hours - 12;
             }
-            
+
             // Get day of week
             const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
             const dayName = days[now.getDay()];
-            
-            // Format date (e.g., "February 2, 2026")
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
-            const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-            document.getElementById('dateDisplay').textContent = dateString;
-            
+
             // Format numbers with leading zeros
             const hoursFormatted = String(hours).padStart(2, '0');
             const minutesFormatted = String(minutes).padStart(2, '0');
-            
+
             // Update hours with flip animation
             if (lastHour !== hoursFormatted) {
                 const hoursCard = document.getElementById('hours');
                 hoursCard.classList.add('flipping');
-                
+
                 setTimeout(() => {
                     document.getElementById('hoursNum').textContent = hoursFormatted;
                     document.getElementById('ampm').textContent = isPM ? 'PM' : 'AM';
                     hoursCard.classList.remove('flipping');
                 }, 300);
-                
+
                 lastHour = hoursFormatted;
             }
-            
+
             // Update minutes with flip animation
             if (lastMinute !== minutesFormatted) {
                 const minutesCard = document.getElementById('minutes');
                 minutesCard.classList.add('flipping');
-                
+
                 setTimeout(() => {
                     document.getElementById('minutesNum').textContent = minutesFormatted;
                     minutesCard.classList.remove('flipping');
                 }, 300);
-                
+
                 lastMinute = minutesFormatted;
             }
-            
+
             // Update day
             if (lastDay !== dayName) {
                 const dayCard = document.getElementById('day');
                 dayCard.classList.add('flipping');
-                
+
                 setTimeout(() => {
                     document.getElementById('dayName').textContent = dayName;
                     dayCard.classList.remove('flipping');
                 }, 300);
-                
+
                 lastDay = dayName;
             }
         }
