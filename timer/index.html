@@ -32,15 +32,11 @@
         .timer-display {
             background: #d4cdc3;
             border-radius: 16px;
-            padding: 30px 25px 20px 30px;
+            padding: 30px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
         }
 
         .timer-content {
-            flex: 1;
             text-align: center;
         }
 
@@ -63,11 +59,47 @@
             font-weight: 600;
         }
 
+        .icon-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
+        }
+
         .preset-buttons {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             justify-content: center;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
         }
 
         .preset-btn {
@@ -92,46 +124,6 @@
         .preset-btn.active {
             background: rgba(255, 255, 255, 0.4);
             border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .icon-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-top: 5px;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: scale(1.1);
-        }
-
-        .icon-btn:active {
-            transform: scale(0.95);
-        }
-
-        .icon-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: #ffffff;
-        }
-
-        .control-buttons {
-            display: none;
         }
 
         /* Pulsing animation when timer is running */
@@ -163,8 +155,7 @@
         /* Responsive */
         @media (max-width: 480px) {
             .timer-display {
-                padding: 25px 20px 15px 20px;
-                gap: 15px;
+                padding: 25px 20px;
             }
 
             .time {
@@ -178,23 +169,23 @@
                 margin-bottom: 12px;
             }
 
-            .preset-buttons {
-                gap: 5px;
+            .icon-controls {
+                margin-bottom: 15px;
+            }
+
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .icon-btn svg {
+                width: 16px;
+                height: 16px;
             }
 
             .preset-btn {
                 padding: 5px 10px;
                 font-size: 0.65rem;
-            }
-
-            .icon-btn {
-                width: 35px;
-                height: 35px;
-            }
-
-            .icon-btn svg {
-                width: 14px;
-                height: 14px;
             }
         }
     </style>
@@ -205,25 +196,26 @@
             <div class="timer-content">
                 <div class="time" id="timeDisplay">25:00</div>
                 <div class="timer-label" id="timerLabel">Ready to Start</div>
+                
+                <div class="icon-controls">
+                    <button class="icon-btn" id="startBtn" onclick="toggleTimer()" title="Start/Pause">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" onclick="resetTimer()" title="Reset">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        </svg>
+                    </button>
+                </div>
+
                 <div class="preset-buttons">
                     <button class="preset-btn" onclick="setPreset(15)">15min</button>
                     <button class="preset-btn active" onclick="setPreset(25)">25min</button>
                     <button class="preset-btn" onclick="setPreset(30)">30min</button>
                     <button class="preset-btn" onclick="setPreset(45)">45min</button>
                 </div>
-            </div>
-            
-            <div class="icon-controls">
-                <button class="icon-btn" id="startBtn" onclick="toggleTimer()" title="Start/Pause">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                </button>
-                <button class="icon-btn" onclick="resetTimer()" title="Reset">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
-                    </svg>
-                </button>
             </div>
         </div>
     </div>
