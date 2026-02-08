@@ -29,19 +29,25 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            max-width: 500px;
+            width: 100%;
         }
 
         .clock-container {
             display: flex;
             gap: 15px;
             align-items: center;
+            width: 100%;
+            justify-content: center;
         }
 
         .flip-card {
             position: relative;
             width: 140px;
+            max-width: 140px;
             height: 180px;
             perspective: 1000px;
+            flex-shrink: 0;
         }
 
         .flip-card-inner {
@@ -99,10 +105,12 @@
         /* Mini Calendar Styles */
         .calendar-card {
             width: 140px;
+            max-width: 140px;
             height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .calendar-container {
